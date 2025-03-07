@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teams</title>
+</head>
+<body>
+    <h1>Teams Ranked by Score</h1>
+    <table border="1">
+        <tr>
+            <th>Rank</th>
+            <th>Team Name</th>
+            <th>Score</th>
+        </tr>
+        {% for team in teams %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td><a href="{{ url_for('team', team_id=team[0]) }}">{{ team[1] }}</a></td>
+            <td>{{ team[2] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

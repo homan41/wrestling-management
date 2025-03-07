@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ team[1] }}</title>
+</head>
+<body>
+    <h1>{{ team[1] }}</h1>
+    <h2>Score: {{ team[2] }}</h2>
+    <h3>Wrestlers</h3>
+    <table border="1">
+        <tr>
+            <th>Name</th>
+            <th>Seed</th>
+            <th>Weight Class</th>
+            <th>Score</th>
+            <th>All American</th>
+            <th>Finalist</th>
+            <th>Medal</th>
+        </tr>
+        {% for wrestler in wrestlers %}
+        <tr>
+            <td>{{ wrestler[1] }}</td>
+            <td>{{ wrestler[2] }}</td>
+            <td>{{ wrestler[3] }}</td>
+            <td>{{ wrestler[4] }}</td>
+            <td>{{ 'Yes' if wrestler[5] else 'No' }}</td>
+            <td>{{ 'Yes' if wrestler[7] else 'No' }}</td>
+            <td>{{ wrestler[6] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{{ url_for('index') }}">Back to Teams</a>
+</body>
+</html>
