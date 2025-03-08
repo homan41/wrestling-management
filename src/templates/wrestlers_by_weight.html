@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wrestlers by Weight Class</title>
+    <style>
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .column {
+            flex: 50%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Wrestlers Listed by Weight Class</h1>
+    <div class="container">
+        {% for weight_class, wrestlers in wrestlers_by_weight.items() %}
+        {% if weight_class != 'None' %}
+        <div class="column">
+            <h2>Weight Class {{ weight_class }}</h2>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Seed</th>
+                    <th>Weight Class</th>
+                    <th>Score</th>
+                    <th>All American</th>
+                    <th>Finalist</th>
+                    <th>Medal</th>
+                </tr>
+                {% for wrestler in wrestlers|sort(attribute='4', reverse=True) %}
+                <tr>
+                    <td>{{ wrestler[1] }}</td>
+                    <td>{{ wrestler[2] }}</td>
+                    <td>{{ wrestler[3] }}</td>
+                    <td>{{ wrestler[4] }}</td>
+                    <td>{{ 'Yes' if wrestler[5] else 'No' }}</td>
+                    <td>{{ 'Yes' if wrestler[7] else 'No' }}</td>
+                    <td>{{ wrestler[6] }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    <a href="{{ url_for('index') }}">Back to Teams</a>
+</body>
+</html>

@@ -93,5 +93,9 @@ def wrestlers_by_weight():
     conn.close()
     return render_template('wrestlers_by_weight.html', wrestlers_by_weight=wrestlers_by_weight)
 
+@app.route('/info')
+def info():
+    return render_template('info.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
