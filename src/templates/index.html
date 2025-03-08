@@ -4,22 +4,112 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teams</title>
+    <style>
+        th {
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <h1>Teams Ranked by Score</h1>
-    <table border="1">
-        <tr>
-            <th>Rank</th>
-            <th>Team Name</th>
-            <th>Score</th>
-        </tr>
-        {% for team in teams %}
-        <tr>
-            <td>{{ loop.index }}</td>
-            <td><a href="{{ url_for('team', team_id=team[0]) }}">{{ team[1] }}</a></td>
-            <td>{{ team[2] }}</td>
-        </tr>
-        {% endfor %}
+    <a href="{{ url_for('wrestlers_by_seed') }}">View Wrestlers by Seed</a>
+    <br>
+    <a href="{{ url_for('wrestlers_by_weight') }}">View Wrestlers by Weight Class</a>
+    <br><br>
+    <input type="text" id="searchInput" onkeyup="filterTeams()" placeholder="Search for team names..">
+    <table border="1" id="teamsTable">
+        <thead>
+            <tr>
+                <th onclick="sortTable(0)">Rank</th>
+                <th onclick="sortTable(1)">Team Name</th>
+                <th onclick="sortTable(2)">Score</th>
+                <th onclick="sortTable(3)">Total All Americans</th>
+                <th onclick="sortTable(4)">Total Finalists</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for team, total_all_americans, total_finalists in teams %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td><a href="{{ url_for('team', team_id=team[0]) }}">{{ team[1] }}</a></td>
+                <td>{{ team[2] }}</td>
+                <td>{{ total_all_americans }}</td>
+                <td>{{ total_finalists }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
+
+    <script>
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("teamsTable");
+            switching = true;
+            dir = "asc"; 
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    if (dir == "asc") {
+                        if (n == 1) {
+                            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                                shouldSwitch = true;
+                                break;
+                            }
+                        } else {
+                            if (parseInt(x.innerHTML) > parseInt(y.innerHTML)) {
+                                shouldSwitch = true;
+                                break;
+                            }
+                        }
+                    } else if (dir == "desc") {
+                        if (n == 1) {
+                            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                                shouldSwitch = true;
+                                break;
+                            }
+                        } else {
+                            if (parseInt(x.innerHTML) < parseInt(y.innerHTML)) {
+                                shouldSwitch = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount ++;
+                } else {
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+
+        function filterTeams() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toLowerCase();
+            table = document.getElementById("teamsTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 1; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }       
+            }
+        }
+    </script>
 </body>
 </html>

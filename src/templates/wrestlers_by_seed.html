@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wrestlers by Seed</title>
+</head>
+<body>
+    <h1>Wrestlers Listed by Seed</h1>
+    {% for seed in range(1, 9) %}
+    <h2>Seed {{ seed }}</h2>
+    <table border="1">
+        <tr>
+            <th>Name</th>
+            <th>Seed</th>
+            <th>Weight Class</th>
+            <th>Score</th>
+            <th>All American</th>
+            <th>Finalist</th>
+            <th>Medal</th>
+        </tr>
+        {% for wrestler in wrestlers|selectattr('2', 'equalto', seed)|sort(attribute='4', reverse=True) %}
+        <tr>
+            <td>{{ wrestler[1] }}</td>
+            <td>{{ wrestler[2] }}</td>
+            <td>{{ wrestler[3] }}</td>
+            <td>{{ wrestler[4] }}</td>
+            <td>{{ 'Yes' if wrestler[5] else 'No' }}</td>
+            <td>{{ 'Yes' if wrestler[7] else 'No' }}</td>
+            <td>{{ wrestler[6] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endfor %}
+    
+    {% for seed_range in [(9, 10), (11, 12), (13, 14), (15, 16)] %}
+    <h2>Seeds {{ seed_range[0] }} and {{ seed_range[1] }}</h2>
+    <table border="1">
+        <tr>
+            <th>Name</th>
+            <th>Seed</th>
+            <th>Weight Class</th>
+            <th>Score</th>
+            <th>All American</th>
+            <th>Finalist</th>
+            <th>Medal</th>
+        </tr>
+        {% for wrestler in wrestlers|selectattr('2', 'in', seed_range)|sort(attribute='4', reverse=True) %}
+        <tr>
+            <td>{{ wrestler[1] }}</td>
+            <td>{{ wrestler[2] }}</td>
+            <td>{{ wrestler[3] }}</td>
+            <td>{{ wrestler[4] }}</td>
+            <td>{{ 'Yes' if wrestler[5] else 'No' }}</td>
+            <td>{{ 'Yes' if wrestler[7] else 'No' }}</td>
+            <td>{{ wrestler[6] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endfor %}
+    
+    <h2>Seeds 17 and Higher</h2>
+    <table border="1">
+        <tr>
+            <th>Name</th>
+            <th>Seed</th>
+            <th>Weight Class</th>
+            <th>Score</th>
+            <th>All American</th>
+            <th>Finalist</th>
+            <th>Medal</th>
+        </tr>
+        {% for wrestler in wrestlers|selectattr('2', 'ge', 17)|sort(attribute='4', reverse=True) %}
+        <tr>
+            <td>{{ wrestler[1] }}</td>
+            <td>{{ wrestler[2] }}</td>
+            <td>{{ wrestler[3] }}</td>
+            <td>{{ wrestler[4] }}</td>
+            <td>{{ 'Yes' if wrestler[5] else 'No' }}</td>
+            <td>{{ 'Yes' if wrestler[7] else 'No' }}</td>
+            <td>{{ wrestler[6] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <a href="{{ url_for('index') }}">Back to Teams</a>
+</body>
+</html>

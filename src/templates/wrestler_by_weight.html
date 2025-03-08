@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ team[1] }}</title>
+    <title>Wrestlers by Weight Class</title>
 </head>
 <body>
-    <h1>{{ team[1] }}</h1>
-    <h2>Score: {{ team[2] }}</h2>
-    <h3>Total All Americans: {{ total_all_americans }}</h3>
-    <h3>Total Finalists: {{ total_finalists }}</h3>
-    <h3>Wrestlers</h3>
+    <h1>Wrestlers Listed by Weight Class</h1>
+    {% for weight_class, wrestlers in wrestlers_by_weight.items() %}
+    <h2>Weight Class {{ weight_class }}</h2>
     <table border="1">
         <tr>
             <th>Name</th>
@@ -33,6 +31,7 @@
         </tr>
         {% endfor %}
     </table>
+    {% endfor %}
     <a href="{{ url_for('index') }}">Back to Teams</a>
 </body>
 </html>
