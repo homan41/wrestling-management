@@ -25,6 +25,7 @@
         }
         th {
             background-color: #f2f2f2;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -35,15 +36,16 @@
         {% if weight_class != 'None' %}
         <div class="column">
             <h2>Weight Class {{ weight_class }}</h2>
-            <table>
+            <table id="weightClassTable{{ weight_class }}">
                 <tr>
-                    <th>Name</th>
-                    <th>Seed</th>
-                    <th>Weight Class</th>
-                    <th>Score</th>
-                    <th>All American</th>
-                    <th>Finalist</th>
-                    <th>Medal</th>
+                    <th onclick="sortTable('weightClassTable{{ weight_class }}', 0)">Name</th>
+                    <th onclick="sortTable('weightClassTable{{ weight_class }}', 1)">Seed</th>
+                    <th onclick="sortTable('weightClassTable{{ weight_class }}', 2)">Weight Class</th>
+                    <th onclick="sortTable('weightClassTable{{ weight_class }}', 3)">Score</th>
+                    <th onclick="sortTable('weightClassTable{{ weight_class }}', 4)">All American</th>
+                    <th onclick="sortTable('weightClassTable{{ weight_class }}', 5)">Finalist</th>
+                    <th onclick="sortTable('weightClassTable{{ weight_class }}', 6)">Medal</th>
+                    <th onclick="sortTable('weightClassTable{{ weight_class }}', 7)">Number of Times Picked</th>
                 </tr>
                 {% for wrestler in wrestlers|sort(attribute='4', reverse=True) %}
                 <tr>
@@ -54,6 +56,7 @@
                     <td>{{ 'Yes' if wrestler[5] else 'No' }}</td>
                     <td>{{ 'Yes' if wrestler[7] else 'No' }}</td>
                     <td>{{ wrestler[6] }}</td>
+                    <td>{{ wrestler[8] }}</td>
                 </tr>
                 {% endfor %}
             </table>
@@ -62,5 +65,58 @@
         {% endfor %}
     </div>
     <a href="{{ url_for('index') }}">Back to Teams</a>
+
+    <script>
+        function sortTable(tableId, n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById(tableId);
+            switching = true;
+            dir = "asc"; 
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    if (dir == "asc") {
+                        if (n == 0 || n == 2) {
+                            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                                shouldSwitch = true;
+                                break;
+                            }
+                        } else {
+                            if (parseInt(x.innerHTML) > parseInt(y.innerHTML)) {
+                                shouldSwitch = true;
+                                break;
+                            }
+                        }
+                    } else if (dir == "desc") {
+                        if (n == 0 || n == 2) {
+                            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                                shouldSwitch = true;
+                                break;
+                            }
+                        } else {
+                            if (parseInt(x.innerHTML) < parseInt(y.innerHTML)) {
+                                shouldSwitch = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount ++;
+                } else {
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+    </script>
 </body>
 </html>

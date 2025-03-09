@@ -9,9 +9,10 @@ def load_all_americans_from_excel(file_path):
     workbook = openpyxl.load_workbook(file_path)
     sheet = workbook.active
 
-    for cell in sheet[1]:
-        if cell.value:
-            all_americans.add(cell.value)
+    for cell in sheet.iter_cols(min_col=1, max_col=1, min_row=2, values_only=True):
+        for name in cell:
+            if name:
+                all_americans.add(name)
 
     for cell in sheet.iter_cols(min_col=2, max_col=2, min_row=2, values_only=True):
         for name in cell:

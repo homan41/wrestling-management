@@ -3,52 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teams</title>
+    <title>Wrestlers by Number of Times Picked</title>
     <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
         th {
+            background-color: #f2f2f2;
             cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <h1>Teams Ranked by Score</h1>
-    <p>Page updated on: {{ current_time }}</p>
-    <a href="{{ url_for('wrestlers_by_seed') }}">View Wrestlers by Seed</a>
-    <br>
-    <a href="{{ url_for('wrestlers_by_weight') }}">View Wrestlers by Weight Class</a>
-    <br>
-    <a href="{{ url_for('wrestlers_by_picks') }}">View All Wrestlers</a>
-    <br>
-    <a href="{{ url_for('info') }}">Information Page</a>
-    <br><br>
-    <input type="text" id="searchInput" onkeyup="filterTeams()" placeholder="Search for team names..">
-    <table border="1" id="teamsTable">
+    <h1>Wrestlers Listed by Number of Times Picked - Table Sortable</h1>
+    <input type="text" id="searchInput" onkeyup="filterWrestlers()" placeholder="Search for wrestler names..">
+    <table border="1" id="wrestlersTable">
         <thead>
             <tr>
-                <th onclick="sortTable(0)">Rank</th>
-                <th onclick="sortTable(1)">Team Name</th>
-                <th onclick="sortTable(2)">Score</th>
-                <th onclick="sortTable(3)">Total All Americans</th>
-                <th onclick="sortTable(4)">Total Finalists</th>
+                <th onclick="sortTable(0)">Name</th>
+                <th onclick="sortTable(1)">Seed</th>
+                <th onclick="sortTable(2)">Weight Class</th>
+                <th onclick="sortTable(3)">Score</th>
+                <th onclick="sortTable(4)">All American</th>
+                <th onclick="sortTable(5)">Finalist</th>
+                <th onclick="sortTable(6)">Medal</th>
+                <th onclick="sortTable(7)">Number of Times Picked</th>
             </tr>
         </thead>
         <tbody>
-            {% for team, total_all_americans, total_finalists in teams %}
+            {% for wrestler in wrestlers %}
             <tr>
-                <td>{{ loop.index }}</td>
-                <td><a href="{{ url_for('team', team_id=team[0]) }}">{{ team[1] }}</a></td>
-                <td>{{ team[2] }}</td>
-                <td>{{ total_all_americans }}</td>
-                <td>{{ total_finalists }}</td>
+                <td>{{ wrestler[1] }}</td>
+                <td>{{ wrestler[2] }}</td>
+                <td>{{ wrestler[3] }}</td>
+                <td>{{ wrestler[4] }}</td>
+                <td>{{ 'Yes' if wrestler[5] else 'No' }}</td>
+                <td>{{ 'Yes' if wrestler[7] else 'No' }}</td>
+                <td>{{ wrestler[6] }}</td>
+                <td>{{ wrestler[8] }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 
     <script>
+        function filterWrestlers() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toLowerCase();
+            table = document.getElementById("wrestlersTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 1; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }       
+            }
+        }
+
         function sortTable(n) {
             var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-            table = document.getElementById("teamsTable");
+            table = document.getElementById("wrestlersTable");
             switching = true;
             dir = "asc"; 
             while (switching) {
@@ -59,7 +85,7 @@
                     x = rows[i].getElementsByTagName("TD")[n];
                     y = rows[i + 1].getElementsByTagName("TD")[n];
                     if (dir == "asc") {
-                        if (n == 1) {
+                        if (n == 0 || n == 2) {
                             if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
                                 shouldSwitch = true;
                                 break;
@@ -71,7 +97,7 @@
                             }
                         }
                     } else if (dir == "desc") {
-                        if (n == 1) {
+                        if (n == 0 || n == 2) {
                             if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
                                 shouldSwitch = true;
                                 break;
@@ -96,25 +122,7 @@
                 }
             }
         }
-
-        function filterTeams() {
-            var input, filter, table, tr, td, i, txtValue;
-            input = document.getElementById("searchInput");
-            filter = input.value.toLowerCase();
-            table = document.getElementById("teamsTable");
-            tr = table.getElementsByTagName("tr");
-            for (i = 1; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[1];
-                if (td) {
-                    txtValue = td.textContent || td.innerText;
-                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
-                    }
-                }       
-            }
-        }
     </script>
+    <a href="{{ url_for('index') }}">Back to Teams</a>
 </body>
 </html>

@@ -23,6 +23,7 @@ def create_tables(conn):
             all_american BOOLEAN NOT NULL DEFAULT 0,
             medal INTEGER NOT NULL DEFAULT 0,
             finalist BOOLEAN NOT NULL DEFAULT 0,
+            number_of_times_picked INTEGER NOT NULL DEFAULT 0,
             team_id INTEGER,
             FOREIGN KEY (team_id) REFERENCES teams (id)
         );

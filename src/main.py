@@ -24,7 +24,8 @@ def create_tables(conn):
             score INTEGER NOT NULL DEFAULT 0,
             all_american BOOLEAN NOT NULL DEFAULT 0,
             medal INTEGER NOT NULL DEFAULT 0,
-            finalist BOOLEAN NOT NULL DEFAULT 0
+            finalist BOOLEAN NOT NULL DEFAULT 0,
+            number_of_times_picked INTEGER NOT NULL DEFAULT 0
         );
         """
         
@@ -222,6 +223,17 @@ def update_team_scores(conn):
 
     conn.commit()
 
+def count_wrestler_picks(conn):
+    """Count the number of times each wrestler was picked on a team."""
+    cur = conn.cursor()
+    cur.execute("SELECT wrestler_id, COUNT(*) FROM team_wrestlers GROUP BY wrestler_id")
+    wrestler_picks = cur.fetchall()
+    
+    for wrestler_id, count in wrestler_picks:
+        cur.execute("UPDATE wrestlers SET number_of_times_picked = ? WHERE id = ?", (count, wrestler_id))
+    
+    conn.commit()
+
 def main():
     database = "wrestling.db"
     
@@ -241,6 +253,9 @@ def main():
         # Update team scores
         update_team_scores(conn)
 
+        # Count wrestler picks
+        count_wrestler_picks(conn)
+
         conn.commit()
         conn.close()
     else:
@@ -248,4 +263,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    query_teams("wrestling.db")

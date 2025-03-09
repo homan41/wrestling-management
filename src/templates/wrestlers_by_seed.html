@@ -25,6 +25,7 @@
         }
         th {
             background-color: #f2f2f2;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -34,15 +35,16 @@
         {% for seed in range(1, 9) %}
         <div class="column">
             <h2>Seed {{ seed }}</h2>
-            <table>
+            <table id="seedTable{{ seed }}">
                 <tr>
-                    <th>Name</th>
-                    <th>Seed</th>
-                    <th>Weight Class</th>
-                    <th>Score</th>
-                    <th>All American</th>
-                    <th>Finalist</th>
-                    <th>Medal</th>
+                    <th onclick="sortTable('seedTable{{ seed }}', 0)">Name</th>
+                    <th onclick="sortTable('seedTable{{ seed }}', 1)">Seed</th>
+                    <th onclick="sortTable('seedTable{{ seed }}', 2)">Weight Class</th>
+                    <th onclick="sortTable('seedTable{{ seed }}', 3)">Score</th>
+                    <th onclick="sortTable('seedTable{{ seed }}', 4)">All American</th>
+                    <th onclick="sortTable('seedTable{{ seed }}', 5)">Finalist</th>
+                    <th onclick="sortTable('seedTable{{ seed }}', 6)">Medal</th>
+                    <th onclick="sortTable('seedTable{{ seed }}', 7)">Number of Times Picked</th>
                 </tr>
                 {% for wrestler in wrestlers|selectattr('2', 'equalto', seed)|sort(attribute='4', reverse=True) %}
                 <tr>
@@ -53,6 +55,7 @@
                     <td>{{ 'Yes' if wrestler[5] else 'No' }}</td>
                     <td>{{ 'Yes' if wrestler[7] else 'No' }}</td>
                     <td>{{ wrestler[6] }}</td>
+                    <td>{{ wrestler[8] }}</td>
                 </tr>
                 {% endfor %}
             </table>
@@ -64,15 +67,16 @@
         {% for seed_range in [(9, 10), (11, 12), (13, 14), (15, 16)] %}
         <div class="column">
             <h2>Seeds {{ seed_range[0] }} and {{ seed_range[1] }}</h2>
-            <table>
+            <table id="seedRangeTable{{ seed_range[0] }}_{{ seed_range[1] }}">
                 <tr>
-                    <th>Name</th>
-                    <th>Seed</th>
-                    <th>Weight Class</th>
-                    <th>Score</th>
-                    <th>All American</th>
-                    <th>Finalist</th>
-                    <th>Medal</th>
+                    <th onclick="sortTable('seedRangeTable{{ seed_range[0] }}_{{ seed_range[1] }}', 0)">Name</th>
+                    <th onclick="sortTable('seedRangeTable{{ seed_range[0] }}_{{ seed_range[1] }}', 1)">Seed</th>
+                    <th onclick="sortTable('seedRangeTable{{ seed_range[0] }}_{{ seed_range[1] }}', 2)">Weight Class</th>
+                    <th onclick="sortTable('seedRangeTable{{ seed_range[0] }}_{{ seed_range[1] }}', 3)">Score</th>
+                    <th onclick="sortTable('seedRangeTable{{ seed_range[0] }}_{{ seed_range[1] }}', 4)">All American</th>
+                    <th onclick="sortTable('seedRangeTable{{ seed_range[0] }}_{{ seed_range[1] }}', 5)">Finalist</th>
+                    <th onclick="sortTable('seedRangeTable{{ seed_range[0] }}_{{ seed_range[1] }}', 6)">Medal</th>
+                    <th onclick="sortTable('seedRangeTable{{ seed_range[0] }}_{{ seed_range[1] }}', 7)">Number of Times Picked</th>
                 </tr>
                 {% for wrestler in wrestlers|selectattr('2', 'in', seed_range)|sort(attribute='4', reverse=True) %}
                 <tr>
@@ -83,6 +87,7 @@
                     <td>{{ 'Yes' if wrestler[5] else 'No' }}</td>
                     <td>{{ 'Yes' if wrestler[7] else 'No' }}</td>
                     <td>{{ wrestler[6] }}</td>
+                    <td>{{ wrestler[8] }}</td>
                 </tr>
                 {% endfor %}
             </table>
@@ -93,15 +98,16 @@
     <div class="container">
         <div class="column">
             <h2>Seeds 17 and Higher</h2>
-            <table>
+            <table id="seedTable17">
                 <tr>
-                    <th>Name</th>
-                    <th>Seed</th>
-                    <th>Weight Class</th>
-                    <th>Score</th>
-                    <th>All American</th>
-                    <th>Finalist</th>
-                    <th>Medal</th>
+                    <th onclick="sortTable('seedTable17', 0)">Name</th>
+                    <th onclick="sortTable('seedTable17', 1)">Seed</th>
+                    <th onclick="sortTable('seedTable17', 2)">Weight Class</th>
+                    <th onclick="sortTable('seedTable17', 3)">Score</th>
+                    <th onclick="sortTable('seedTable17', 4)">All American</th>
+                    <th onclick="sortTable('seedTable17', 5)">Finalist</th>
+                    <th onclick="sortTable('seedTable17', 6)">Medal</th>
+                    <th onclick="sortTable('seedTable17', 7)">Number of Times Picked</th>
                 </tr>
                 {% for wrestler in wrestlers|selectattr('2', 'ge', 17)|sort(attribute='4', reverse=True) %}
                 <tr>
@@ -112,6 +118,7 @@
                     <td>{{ 'Yes' if wrestler[5] else 'No' }}</td>
                     <td>{{ 'Yes' if wrestler[7] else 'No' }}</td>
                     <td>{{ wrestler[6] }}</td>
+                    <td>{{ wrestler[8] }}</td>
                 </tr>
                 {% endfor %}
             </table>
@@ -119,5 +126,58 @@
     </div>
     
     <a href="{{ url_for('index') }}">Back to Teams</a>
+
+    <script>
+        function sortTable(tableId, n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById(tableId);
+            switching = true;
+            dir = "asc"; 
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    if (dir == "asc") {
+                        if (n == 0 || n == 2) {
+                            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                                shouldSwitch = true;
+                                break;
+                            }
+                        } else {
+                            if (parseInt(x.innerHTML) > parseInt(y.innerHTML)) {
+                                shouldSwitch = true;
+                                break;
+                            }
+                        }
+                    } else if (dir == "desc") {
+                        if (n == 0 || n == 2) {
+                            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                                shouldSwitch = true;
+                                break;
+                            }
+                        } else {
+                            if (parseInt(x.innerHTML) < parseInt(y.innerHTML)) {
+                                shouldSwitch = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount ++;
+                } else {
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+    </script>
 </body>
 </html>

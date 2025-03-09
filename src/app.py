@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 import sqlite3
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -11,6 +12,7 @@ def create_connection(db_file):
     except sqlite3.Error as e:
         print(e)
     return conn
+
 
 @app.route('/')
 def index():
@@ -40,7 +42,11 @@ def index():
         teams_with_stats.append((team, total_all_americans, total_finalists))
     
     conn.close()
-    return render_template('index.html', teams=teams_with_stats)
+    
+    # Get the current date and time
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    return render_template('index.html', teams=teams_with_stats, current_time=current_time)
 
 @app.route('/team/<int:team_id>')
 def team(team_id):
@@ -92,6 +98,15 @@ def wrestlers_by_weight():
         wrestlers_by_weight[weight_class[0]] = cur.fetchall()
     conn.close()
     return render_template('wrestlers_by_weight.html', wrestlers_by_weight=wrestlers_by_weight)
+
+@app.route('/wrestlers_by_picks')
+def wrestlers_by_picks():
+    conn = create_connection('wrestling.db')
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM wrestlers WHERE number_of_times_picked > 0 ORDER BY number_of_times_picked DESC")
+    wrestlers = cur.fetchall()
+    conn.close()
+    return render_template('wrestlers_by_picks.html', wrestlers=wrestlers)
 
 @app.route('/info')
 def info():
