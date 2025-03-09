@@ -24,9 +24,9 @@ def get_scoring_table_from_web():
 
     return pd.DataFrame(data)
 
-def get_score_dictionary():
+def get_score_dictionary(pandas_table):
     scoring_dictionary = {}
-    scoring_table = get_scoring_table_from_web()
+    scoring_table = pandas_table
     for row in range(len(scoring_table)):
         if scoring_table.loc[row, 0] is None: continue
         wrestlerName = removeTeamNameFromWrestlerName(scoring_table.loc[row, 0])

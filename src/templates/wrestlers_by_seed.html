@@ -46,7 +46,7 @@
                     <th onclick="sortTable('seedTable{{ seed }}', 6)">Medal</th>
                     <th onclick="sortTable('seedTable{{ seed }}', 7)">Number of Times Picked</th>
                 </tr>
-                {% for wrestler in wrestlers|selectattr('2', 'equalto', seed)|sort(attribute='4', reverse=True) %}
+                {% for wrestler in wrestlers|selectattr('2', 'equalto', seed)|selectattr('8', 'gt', 0)|sort(attribute='4', reverse=True) %}
                 <tr>
                     <td>{{ wrestler[1] }}</td>
                     <td>{{ wrestler[2] }}</td>
@@ -78,7 +78,7 @@
                     <th onclick="sortTable('seedRangeTable{{ seed_range[0] }}_{{ seed_range[1] }}', 6)">Medal</th>
                     <th onclick="sortTable('seedRangeTable{{ seed_range[0] }}_{{ seed_range[1] }}', 7)">Number of Times Picked</th>
                 </tr>
-                {% for wrestler in wrestlers|selectattr('2', 'in', seed_range)|sort(attribute='4', reverse=True) %}
+                {% for wrestler in wrestlers|selectattr('2', 'in', seed_range)|selectattr('8', 'gt', 0)|sort(attribute='4', reverse=True) %}
                 <tr>
                     <td>{{ wrestler[1] }}</td>
                     <td>{{ wrestler[2] }}</td>
@@ -109,7 +109,7 @@
                     <th onclick="sortTable('seedTable17', 6)">Medal</th>
                     <th onclick="sortTable('seedTable17', 7)">Number of Times Picked</th>
                 </tr>
-                {% for wrestler in wrestlers|selectattr('2', 'ge', 17)|sort(attribute='4', reverse=True) %}
+                {% for wrestler in wrestlers|selectattr('2', 'ge', 17)|selectattr('8', 'gt', 0)|sort(attribute='4', reverse=True) %}
                 <tr>
                     <td>{{ wrestler[1] }}</td>
                     <td>{{ wrestler[2] }}</td>

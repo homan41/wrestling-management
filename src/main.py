@@ -2,6 +2,7 @@ import sqlite3
 from excel_utils import load_wrestlers_from_excel, load_teams_from_excel, load_teams_wrestlers_from_excel, load_all_americans_from_excel
 from models import Wrestler, Team
 from scoring import get_score_dictionary
+from scoring_two import get_table_from_web, get_score_dictionary_two
 
 def create_connection(db_file):
     """Create a database connection to the SQLite database specified by db_file."""
@@ -192,7 +193,7 @@ def update_scoring(conn):
             update_wrestler_medal(conn, wrestler_id, medal)
 
     # Get the score dictionary
-    score_dict = get_score_dictionary()
+    score_dict = get_score_dictionary_two()
 
     # Update wrestler scores in the database
     for wrestler_name, score in score_dict.items():
@@ -215,8 +216,6 @@ def update_team_scores(conn):
         cur.execute("SELECT SUM(score) FROM wrestlers INNER JOIN team_wrestlers ON wrestlers.id = team_wrestlers.wrestler_id WHERE team_wrestlers.team_id = ?", (team_id,))
         team_score = cur.fetchone()[0] or 0
 
-        # Debug statement to verify team score calculation
-        print(f"Updating team {team_id} with score {team_score}")
 
         # Update the team's score
         cur.execute("UPDATE teams SET score = ? WHERE id = ?", (team_score, team_id))

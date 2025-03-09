@@ -12,18 +12,21 @@ def load_all_americans_from_excel(file_path):
     for cell in sheet.iter_cols(min_col=1, max_col=1, min_row=2, values_only=True):
         for name in cell:
             if name:
-                all_americans.add(name)
+                seed, split_name = name.split(') ')
+                all_americans.add(split_name)
 
     for cell in sheet.iter_cols(min_col=2, max_col=2, min_row=2, values_only=True):
         for name in cell:
             if name:
-                finalists.add(name)
+                seed, split_name = name.split(') ')
+                finalists.add(split_name)
 
     for col in sheet.iter_cols(min_col=3, values_only=True):
         medal = col[0]
         for name in col[1:]:
             if name:
-                medals[name] = medal
+                seed, split_name = name.split(') ')
+                medals[split_name] = medal
 
     return all_americans, finalists, medals
 

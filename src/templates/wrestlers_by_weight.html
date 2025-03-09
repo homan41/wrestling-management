@@ -47,7 +47,7 @@
                     <th onclick="sortTable('weightClassTable{{ weight_class }}', 6)">Medal</th>
                     <th onclick="sortTable('weightClassTable{{ weight_class }}', 7)">Number of Times Picked</th>
                 </tr>
-                {% for wrestler in wrestlers|sort(attribute='4', reverse=True) %}
+                {% for wrestler in wrestlers|selectattr('8', 'gt', 0)|sort(attribute='4', reverse=True) %}
                 <tr>
                     <td>{{ wrestler[1] }}</td>
                     <td>{{ wrestler[2] }}</td>
