@@ -4,3 +4,5 @@ openpyxl
 pandas
 requests
 bs4
+selenium
+sqlite3
